@@ -5,7 +5,7 @@
 n=7 #codeword length
 k=4 #message bit length
 
-H = [[1110100],[1101010],[1011001]] # parity-check matrix
+H = [[1,1,1,0,1,0,0],[1,1,0,1,0,1,0],[1,0,1,1,0,0,1]] # parity-check matrix
 
 
 
