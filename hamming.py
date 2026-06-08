@@ -9,6 +9,7 @@ class HammingCode:
         self.k = k
         self.n = self.H.shape[1]
         self.G = self.build_g_matrix(self.H)
+        self.check_the_generator_matrix()
 
     # take the message block and encode it
     def encode_block(self, message_block):
@@ -91,3 +92,20 @@ class HammingCode:
         G = np.concatenate((I, P), axis=1)
 
         return G
+    
+
+
+    # adding a generator matrix check
+
+    def check_the_generator_matrix(self):
+        print("Generator matrix check:")
+        print("  G shape:", self.G.shape)
+        print("  H shape:", self.H.shape)
+
+        G_times_H_transpose = np.matmul(self.G, np.transpose(self.H))
+        check = np.mod(G_times_H_transpose, 2)
+
+        print("  G mult H.T mod 2:")
+        print(check)
+        print("  Passed:", np.all(check == 0))
+        print()    

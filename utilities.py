@@ -16,7 +16,7 @@ def text_to_bits(text):
     return np.array(bits, dtype=np.uint8)
 
 
-def print_bits_summary(name, bits, preview_size=32):
+def print_bits_summary(name, bits, preview_size=168):
     print(name)
     print("  Length:", len(bits))
     print("  First bits:", bits[:preview_size])
