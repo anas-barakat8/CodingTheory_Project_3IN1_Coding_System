@@ -74,7 +74,7 @@ def hamming_only():
     """
     
     print("=" * 50)
-    print("BSC TEST")
+    print(" HAMMING BSC TEST")
     print("=" * 50)
     for ber in params.ber_values:
         for seed in params.seeds:
@@ -177,7 +177,7 @@ def convolutional_only():
 
 
     decoded_bits = convolutional_encoder.viterbi_decode(encoded_bits_terminated, terminate=True)
-
+    """
     print("-" * 50)
     print("Viterbi clean decoding test:")
     print("-" * 50)
@@ -217,3 +217,34 @@ def convolutional_only():
     print("Decoded from error:    ", decoded_error_bits)
     print("Passed:", np.array_equal(message_bits, decoded_error_bits))
     print()
+    """
+    print("-" * 50)
+    print(" CONVOLUTIONAL BSC TEST ")
+    print("-" * 50)
+
+    for ber in params.ber_values:
+        for seed in params.seeds:
+
+
+            encoded_bits = convolutional_encoder.encode(message_bits, terminate=True)
+            received_bits, errors_before = channel.Binary_Symmetric_Channel(encoded_bits, ber, seed)
+
+            decoded_received_bits = convolutional_encoder.viterbi_decode(received_bits, terminate=True)
+
+            errors_after = np.sum(message_bits != decoded_received_bits)
+            post_decoding_ber = round(errors_after/len(message_bits),4)
+
+            print("BSC settings:")
+            print("  Channel BER:", ber)
+            print("  Noise Seed:", seed)
+            print()
+
+            print("Channel errors:")
+            print("  Errors before decoding:", errors_before)
+            print("  Errors after decoding: ", errors_after)
+            print("  Perfect decode:", errors_after == 0)
+            print("  Post-decoding BER:", post_decoding_ber)
+            print()
+
+            print_bits_summary("Received bits after BSC:", received_bits)
+            print_bits_summary("Decoded BSC bits:", decoded_received_bits)

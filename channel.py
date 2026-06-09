@@ -13,6 +13,5 @@ def Binary_Symmetric_Channel(bits, ber, seed):
 
     received[flip_mask] ^= 1   
 
-    errors_before = np.uint8(flip_mask.sum())
-
+    errors_before = int(flip_mask.sum()) # changed from uint8 to int to avoid any errors when implementing the concatenated code.   
     return received, errors_before
