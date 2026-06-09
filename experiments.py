@@ -2,6 +2,7 @@
 import parameters as params
 import hamming
 import channel
+import convolutional
 from utilities import *
 
 
@@ -102,3 +103,73 @@ def hamming_only():
 
             print_bits_summary("Received bits after BSC:", received_bits)
             print_bits_summary("Decoded BSC bits:", decoded_received_bits)
+
+
+
+def convolutional_only():
+    print("=" * 50)
+    print("CONVOLUTIONAL CODE TEST")
+    print("=" * 50)
+
+    convolutional_encoder = convolutional.ConvolutionalCode(params.generators, params.K, params.memory)
+
+    message_bits = text_to_bits(params.personal_message)
+
+    encoded_bits_terminated = convolutional_encoder.encode(message_bits, terminate=True)
+    #
+
+    number_of_generators = len(convolutional_encoder.generators)
+
+    
+
+    expected_length_terminated = (len(message_bits) + convolutional_encoder.memory) * number_of_generators
+
+    print("Original message:")
+    print(" ", params.personal_message)
+    print()
+
+    print("Convolutional parameters:")
+    print("  Constraint length:", convolutional_encoder.constraint_length)
+    print("  Memory:", convolutional_encoder.memory)
+    print("  Number of states:", convolutional_encoder.num_states)
+    print("  Number of generators:", number_of_generators)
+    print("  Generators:")
+    print(convolutional_encoder.generators)
+    print()
+
+    print_bits_summary("Original message bits:", message_bits)
+
+    print_bits_summary("Encoded bits with termination:", encoded_bits_terminated)
+
+    print("Encoding length test with termination:")
+    print("  Expected encoded length:", expected_length_terminated)
+    print("  Actual encoded length:  ", len(encoded_bits_terminated))
+    print("  Passed:", len(encoded_bits_terminated) == expected_length_terminated)
+    print()
+
+    
+    print("-" * 50)
+    print("STATE TRANSITION TEST")
+    print("-" * 50)
+
+    state = 0
+
+    print("Start state:", state)
+    print("Start state bits:", convolutional_encoder.state_to_bits(state))
+    print()
+
+    for bit in message_bits[:8]:
+        output = convolutional_encoder.output_bits(bit, state)
+        next_state = convolutional_encoder.next_state(bit, state)
+
+        print("Input bit:", bit)
+        print("  Current state:", state)
+        print("  Current state bits:", convolutional_encoder.state_to_bits(state))
+        print("  Output bits:", output)
+        print("  Next state:", next_state)
+        print("  Next state bits:", convolutional_encoder.state_to_bits(next_state))
+        print()
+
+        state = next_state
+
+    print("=" * 50)            

@@ -18,6 +18,8 @@ g1 = [1, 1, 0, 1]
 
 g2 = [1, 0, 1, 1]  
 
+generators = [g1, g2] # the order of generators is reversed to match the expected output
+
 # experiment settings
 
 personal_message = "ECC2026-S04D"
