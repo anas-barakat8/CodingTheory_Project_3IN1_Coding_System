@@ -173,3 +173,47 @@ def convolutional_only():
         state = next_state
 
     print("=" * 50)            
+
+
+
+    decoded_bits = convolutional_encoder.viterbi_decode(encoded_bits_terminated, terminate=True)
+
+    print("-" * 50)
+    print("Viterbi clean decoding test:")
+    print("-" * 50)
+    print("  Original length:", len(message_bits))
+    print("  Encoded length with termination:", len(encoded_bits_terminated))
+    print("  Decoded length: ", len(decoded_bits))
+    print("  Original bits:  ", message_bits)
+    print("  Encoded bits:   ", encoded_bits_terminated)
+    print("  Decoded bits:   ", decoded_bits)
+    print("  Passed:", np.array_equal(message_bits, decoded_bits))
+    print()
+
+    print("-" * 50)
+    print("VITERBI SINGLE-BIT ERROR TEST")
+    print("-" * 50)
+
+    received_bits_with_error = encoded_bits_terminated.copy()
+
+    error_position = 5
+    received_bits_with_error[error_position] ^= 1
+
+    decoded_error_bits = convolutional_encoder.viterbi_decode(received_bits_with_error, terminate=True)
+    
+
+    print("Original message length: ", len(message_bits))
+    print("Terminated encoded length:  ", len(encoded_bits_terminated))
+    print("Received with error length: ", len(received_bits_with_error))
+    print("Decoded message length:    ", len(decoded_error_bits))
+    print()
+
+    print("Flipped encoded bit position:   ", error_position)
+    print("Original encoded bit:     ", encoded_bits_terminated)
+    print("Received bits with error:", received_bits_with_error)
+    print()
+
+    print("Original message bits:", message_bits)
+    print("Decoded from error:    ", decoded_error_bits)
+    print("Passed:", np.array_equal(message_bits, decoded_error_bits))
+    print()
