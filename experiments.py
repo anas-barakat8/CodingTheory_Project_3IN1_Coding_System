@@ -4,6 +4,7 @@ import hamming
 import channel
 import convolutional
 import concatenated
+import matplotlib.pyplot as plt
 from utilities import *
 
 
@@ -431,9 +432,6 @@ def concatenated_only():
     return concatenated_results, concatenated_average
 
 
-
-
-
 def run_all_experiments():
     hamming_results, hamming_average = hamming_only()
 
@@ -441,12 +439,41 @@ def run_all_experiments():
 
     concatenated_results, concatenated_average = concatenated_only()
 
-    return (hamming_results,hamming_average,convolutional_results,convolutional_average,concatenated_results,concatenated_average)
+
+    plot_results(hamming_results,hamming_average,convolutional_results,convolutional_average,
+                 concatenated_results,concatenated_average)
+    
 
 
-def plot_results():
-    pass
+def plot_results(hamming_results,hamming_average,convolutional_results,convolutional_average,
+                 concatenated_results,concatenated_average):
 
+    plt.figure(figsize=(10, 6))
 
+    #Hamming
+    for seed, values in hamming_results.items():
+        plt.plot(params.ber_values,values,linestyle="--",alpha=0.35,linewidth=2,label=f"Hamming seed {seed}")
+
+    plt.plot(params.ber_values,hamming_average,marker="o",linewidth=3,label="Hamming average")
+
+    # Convolutional
+    for seed, values in convolutional_results.items():
+        plt.plot(params.ber_values,values,linestyle="--",alpha=0.35,linewidth=2,label=f"Convolutional seed {seed}")
+
+    plt.plot(params.ber_values,convolutional_average,marker="o",linewidth=3,label="Convolutional average")
+
+    #Concatenated
+    for seed, values in concatenated_results.items():
+        plt.plot(params.ber_values,values,linestyle="--",alpha=0.35,linewidth=2,label=f"Concatenated seed {seed}")
+
+    plt.plot(params.ber_values,concatenated_average,marker="o",linewidth=3,label="Concatenated average")
+
+    plt.xlabel("Channel BER", fontsize=12, fontweight="bold")
+    plt.ylabel("Post-decoding BER", fontsize=12, fontweight="bold")
+    plt.title("Post-decoding BER vs Channel BER", fontsize=14, fontweight="bold")
+    plt.grid(True, linestyle="--", alpha=0.5)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()
 
 
