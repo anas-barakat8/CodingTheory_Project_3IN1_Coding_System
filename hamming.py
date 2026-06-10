@@ -9,7 +9,7 @@ class HammingCode:
         self.k = k
         self.n = self.H.shape[1]
         self.G = self.build_g_matrix(self.H)
-        self.check_the_generator_matrix()
+        #self.check_the_generator_matrix()
 
     # take the message block and encode it
     def encode_block(self, message_block):

@@ -23,3 +23,15 @@ def concatenated_encode(message_bits):
     return concatenated_encoded_bits
 
 
+def concatenated_decode(received_bits):
+    
+    hamming_code = hamming.HammingCode(params.H, params.k)
+    convolutional_code = convolutional.ConvolutionalCode(params.generators, params.K, params.memory)
+
+    convolutional_decoded_bits = convolutional_code.viterbi_decode(received_bits, terminate=True)
+
+    concatenated_decoded_bits = hamming_code.decode(convolutional_decoded_bits)
+
+    return concatenated_decoded_bits
+
+

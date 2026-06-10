@@ -263,9 +263,58 @@ def conatenated():
 
     concatenated_encoded_bits = concatenated.concatenated_encode(message_bits)    
     concateneted_expected_length = int(((len(message_bits) / params.k * params.n) + params.memory) * (len(params.generators)))
+    concatenated_decoded_bits = concatenated.concatenated_decode(concatenated_encoded_bits)
 
-    print("  Original length:", len(message_bits))
+
+    print("  Original bits length:", len(message_bits))
     print("  Encoded bits length:", len(concatenated_encoded_bits))
-    print("  Expected encoded length:", concateneted_expected_length)
-    print("  Passed:", len(concatenated_encoded_bits) == concateneted_expected_length)
+    print("  Expected encoded bits length:", concateneted_expected_length)
+    print("  Decoded bits length:", len(concatenated_decoded_bits))
+    print("  Expected decoded bits length:", len(message_bits))
+    print("  Encoding passed:", len(concatenated_encoded_bits) == concateneted_expected_length)
+    print("  Decoding passed:", np.array_equal(message_bits, concatenated_decoded_bits))
     print()
+
+    print("Original message:", params.personal_message)
+    print("Original message bits:",message_bits)
+    print("Encoded bits using concatenated code:", concatenated_encoded_bits)
+    print("Decoded bits using concatenated code:", concatenated_decoded_bits)
+    print()
+
+
+    print("=" * 50)
+    print("-" * 50)
+    print("CONTATENATED SINGLE-BIT ERROR TEST")
+    print("-" * 50)
+
+    received_bits_with_error = concatenated_encoded_bits.copy()
+
+    error_position = 8
+    received_bits_with_error[error_position] ^= 1
+
+    decoded_error_bits = concatenated.concatenated_decode(received_bits_with_error)
+    
+
+    print("Original message length: ", len(message_bits))
+    print("Concatenated encoded length:  ", len(concatenated_encoded_bits))
+    print("Received with error length: ", len(received_bits_with_error))
+    print("Decoded message length:    ", len(decoded_error_bits))
+    print()
+
+    print("Flipped encoded bit position:   ", error_position)
+    print("Original encoded bits:     ", concatenated_encoded_bits)
+    print("Received bits with error:", received_bits_with_error)
+    print()
+
+    print("Original message bits:", message_bits)
+    print("Decoded from error:    ", decoded_error_bits)
+    print("Passed:", np.array_equal(message_bits, decoded_error_bits))
+    print()
+    
+
+
+
+
+
+
+
