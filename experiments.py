@@ -111,7 +111,7 @@ def hamming_only():
     print("-" * 50)
     print()
     for seed, values in hamming_results.items():
-        print(f" Post-decoding BER results for seed {seed}: {values}")
+        print(f" Hamming post-decoding BER results for seed {seed}: {values}")
         print()
 
 
@@ -130,6 +130,7 @@ def hamming_only():
     print("-" * 50)
     print()
 
+    return hamming_results, hamming_average
 
 def convolutional_only():
     print("=" * 50)
@@ -285,7 +286,7 @@ def convolutional_only():
     print("-" * 50)
     print()
     for seed, values in convolutional_results.items():
-        print(f" Post-decoding BER results for seed {seed}: {values}")
+        print(f" Convolutional post-decoding BER results for seed {seed}: {values}")
         print()
 
 
@@ -304,9 +305,10 @@ def convolutional_only():
     print("-" * 50)
     print()
 
+    return convolutional_results, convolutional_average
 
 
-def conatenated():
+def concatenated_only():
 
     print("=" * 50)
     print("CONCATENATED CODE TEST")
@@ -333,7 +335,7 @@ def conatenated():
     print("Encoded bits using concatenated code:", concatenated_encoded_bits)
     print("Decoded bits using concatenated code:", concatenated_decoded_bits)
     print()
-    
+
     """
     print("=" * 50)
     print("-" * 50)
@@ -407,7 +409,7 @@ def conatenated():
     print("-" * 50)
     print()
     for seed, values in concatenated_results.items():
-        print(f" Post-decoding BER results for seed {seed}: {values}")
+        print(f" Concatenated post-decoding BER results for seed {seed}: {values}")
         print()
 
 
@@ -426,7 +428,24 @@ def conatenated():
     print("-" * 50)
     print()
 
+    return concatenated_results, concatenated_average
 
+
+
+
+
+def run_all_experiments():
+    hamming_results, hamming_average = hamming_only()
+
+    convolutional_results, convolutional_average = convolutional_only()
+
+    concatenated_results, concatenated_average = concatenated_only()
+
+    return (hamming_results,hamming_average,convolutional_results,convolutional_average,concatenated_results,concatenated_average)
+
+
+def plot_results():
+    pass
 
 
 
