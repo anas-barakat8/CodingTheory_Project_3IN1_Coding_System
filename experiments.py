@@ -3,6 +3,7 @@ import parameters as params
 import hamming
 import channel
 import convolutional
+import concatenated
 from utilities import *
 
 
@@ -248,3 +249,23 @@ def convolutional_only():
 
             print_bits_summary("Received bits after BSC:", received_bits)
             print_bits_summary("Decoded BSC bits:", decoded_received_bits)
+
+
+
+
+def conatenated():
+
+    print("=" * 50)
+    print("CONCATENATED CODE TEST")
+    print("=" * 50)
+
+    message_bits = text_to_bits(params.personal_message)
+
+    concatenated_encoded_bits = concatenated.concatenated_encode(message_bits)    
+    concateneted_expected_length = int(((len(message_bits) / params.k * params.n) + params.memory) * (len(params.generators)))
+
+    print("  Original length:", len(message_bits))
+    print("  Encoded bits length:", len(concatenated_encoded_bits))
+    print("  Expected encoded length:", concateneted_expected_length)
+    print("  Passed:", len(concatenated_encoded_bits) == concateneted_expected_length)
+    print()
