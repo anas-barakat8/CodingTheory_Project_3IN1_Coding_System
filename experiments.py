@@ -70,25 +70,29 @@ def hamming_only():
 
     print("=" * 50)
 
-    
-
     """
-    
-    print("=" * 50)
-    print(" HAMMING BSC TEST")
-    print("=" * 50)
-    for ber in params.ber_values:
-        for seed in params.seeds:
+  
+    print("-" * 50)
+    print(" HAMMING BSC TEST ")
+    print("-" * 50)
 
-            #ber = params.ber_values[3]
-            #seed = params.seeds[0]
+    hamming_results = {}
+
+    for seed in params.seeds: # changed the order of the loops becuse its much easier to store the results since we need to run 5 ber values for each seed.
+        hamming_results[seed] = []
+
+        for ber in params.ber_values:
+
             encoded_bits = hamming_encoder.encode(message_bits)
+
             received_bits, errors_before = channel.Binary_Symmetric_Channel(encoded_bits, ber, seed)
 
             decoded_received_bits = hamming_encoder.decode(received_bits)
 
             errors_after = np.sum(message_bits != decoded_received_bits)
-            post_decoding_ber = round(errors_after/len(message_bits),4)
+            post_decoding_ber = round(float(errors_after / len(message_bits)), 4) # float is used to overcome the numpy results preview issue.
+
+            hamming_results[seed].append(post_decoding_ber)
 
             print("BSC settings:")
             print("  Channel BER:", ber)
@@ -102,9 +106,29 @@ def hamming_only():
             print("  Post-decoding BER:", post_decoding_ber)
             print()
 
-            print_bits_summary("Received bits after BSC:", received_bits)
-            print_bits_summary("Decoded BSC bits:", decoded_received_bits)
+    print("-" * 50)
+    print("The Hamming Coding Scheme Results Summary:")
+    print("-" * 50)
+    print()
+    for seed, values in hamming_results.items():
+        print(f" Post-decoding BER results for seed {seed}: {values}")
+        print()
 
+
+    all_seed_results = np.array(list(hamming_results.values())) # convert the results to a matrix using numpy array so that taking the average will be easier
+
+    hamming_average = np.mean(all_seed_results, axis=0) # take the average of  post-decoding BER for each channel ber value across the 3 seeds.
+    rounded_hamming_average = []
+
+    for value in hamming_average:
+        rounded_value = round(float(value), 4)
+        rounded_hamming_average.append(rounded_value)
+
+    hamming_average = rounded_hamming_average
+    print(" Hamming average post-decoding BER results:", hamming_average) 
+    print()
+    print("-" * 50)
+    print()
 
 
 def convolutional_only():
@@ -173,7 +197,7 @@ def convolutional_only():
 
         state = next_state
 
-    print("=" * 50)            
+              
 
 
 
@@ -219,21 +243,30 @@ def convolutional_only():
     print("Passed:", np.array_equal(message_bits, decoded_error_bits))
     print()
     """
+
     print("-" * 50)
     print(" CONVOLUTIONAL BSC TEST ")
     print("-" * 50)
 
-    for ber in params.ber_values:
-        for seed in params.seeds:
+    convolutional_results = {}
 
+    for seed in params.seeds: # changed the order of the loops becuse its much easier to store the results since we need to run 5 ber values for each seed.
+        convolutional_results[seed] = []
+
+        for ber in params.ber_values:
 
             encoded_bits = convolutional_encoder.encode(message_bits, terminate=True)
-            received_bits, errors_before = channel.Binary_Symmetric_Channel(encoded_bits, ber, seed)
+
+            received_bits, errors_before = channel.Binary_Symmetric_Channel(
+                encoded_bits, ber, seed
+            )
 
             decoded_received_bits = convolutional_encoder.viterbi_decode(received_bits, terminate=True)
 
             errors_after = np.sum(message_bits != decoded_received_bits)
-            post_decoding_ber = round(errors_after/len(message_bits),4)
+            post_decoding_ber = round(float(errors_after / len(message_bits)), 4) # float is used to overcome the numpy results preview issue.
+
+            convolutional_results[seed].append(post_decoding_ber)
 
             print("BSC settings:")
             print("  Channel BER:", ber)
@@ -247,9 +280,29 @@ def convolutional_only():
             print("  Post-decoding BER:", post_decoding_ber)
             print()
 
-            print_bits_summary("Received bits after BSC:", received_bits)
-            print_bits_summary("Decoded BSC bits:", decoded_received_bits)
+    print("-" * 50)
+    print("The Convolutional Coding Scheme Results Summary:")
+    print("-" * 50)
+    print()
+    for seed, values in convolutional_results.items():
+        print(f" Post-decoding BER results for seed {seed}: {values}")
+        print()
 
+
+    all_seed_results = np.array(list(convolutional_results.values())) # convert the results to a matrix using numpy array so that taking the average will be easier
+
+    convolutional_average = np.mean(all_seed_results, axis=0) # take the average of  post-decoding BER for each channel ber value across the 3 seeds.
+    rounded_convolutional_average = []
+
+    for value in convolutional_average:
+        rounded_value = round(float(value), 4)
+        rounded_convolutional_average.append(rounded_value)
+
+    convolutional_average = rounded_convolutional_average
+    print(" Convolutional average post-decoding BER results:", convolutional_average) 
+    print()
+    print("-" * 50)
+    print()
 
 
 
@@ -280,11 +333,11 @@ def conatenated():
     print("Encoded bits using concatenated code:", concatenated_encoded_bits)
     print("Decoded bits using concatenated code:", concatenated_decoded_bits)
     print()
-
-
+    
+    """
     print("=" * 50)
     print("-" * 50)
-    print("CONTATENATED SINGLE-BIT ERROR TEST")
+    print("CONCATENATED SINGLE-BIT ERROR TEST")
     print("-" * 50)
 
     received_bits_with_error = concatenated_encoded_bits.copy()
@@ -311,7 +364,67 @@ def conatenated():
     print("Passed:", np.array_equal(message_bits, decoded_error_bits))
     print()
     
+    """
 
+    print("-" * 50)
+    print(" CONCATENATED BSC TEST ")
+    print("-" * 50)
+
+    concatenated_results = {}
+
+    for seed in params.seeds: # changed the order of the loops becuse its much easier to store the results since we need to run 5 ber values for each seed.
+        concatenated_results[seed] = []
+
+        for ber in params.ber_values:
+
+            encoded_bits = concatenated.concatenated_encode(message_bits)
+
+            received_bits, errors_before = channel.Binary_Symmetric_Channel(
+                encoded_bits, ber, seed
+            )
+
+            decoded_received_bits = concatenated.concatenated_decode(received_bits)
+
+            errors_after = np.sum(message_bits != decoded_received_bits)
+            post_decoding_ber = round(float(errors_after / len(message_bits)), 4) # float is used to overcome the numpy results preview issue.
+
+            concatenated_results[seed].append(post_decoding_ber)
+
+            print("BSC settings:")
+            print("  Channel BER:", ber)
+            print("  Noise Seed:", seed)
+            print()
+
+            print("Channel errors:")
+            print("  Errors before decoding:", errors_before)
+            print("  Errors after decoding: ", errors_after)
+            print("  Perfect decode:", errors_after == 0)
+            print("  Post-decoding BER:", post_decoding_ber)
+            print()
+
+    print("-" * 50)
+    print("The Concatenated Coding Scheme Results Summary:")
+    print("-" * 50)
+    print()
+    for seed, values in concatenated_results.items():
+        print(f" Post-decoding BER results for seed {seed}: {values}")
+        print()
+
+
+    all_seed_results = np.array(list(concatenated_results.values())) # convert the results to a matrix using numpy array so that taking the average will be easier
+
+    concatenated_average = np.mean(all_seed_results, axis=0) # take the average of  post-decoding BER for each channel ber value across the 3 seeds.
+    rounded_concatenated_average = []
+
+    for value in concatenated_average:
+        rounded_value = round(float(value), 4)
+        rounded_concatenated_average.append(rounded_value)
+
+    concatenated_average = rounded_concatenated_average
+    print(" Concatenated average post-decoding BER results:", concatenated_average) 
+    print()
+    print("-" * 50)
+    print()
 
 
 

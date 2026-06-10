@@ -4,7 +4,7 @@ from experiments import hamming_only, convolutional_only,conatenated
 
 
 def main():
-   # hamming_only()
+   #hamming_only()
 
     #convolutional_only()
 
