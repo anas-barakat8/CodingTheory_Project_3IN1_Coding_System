@@ -14,9 +14,9 @@ K = 4 #constraint length
 memory = 3
 states = 8
 
-g1 = [1, 1, 0, 1]  
+g1 = [1, 0, 1, 1]   
 
-g2 = [1, 0, 1, 1]  
+g2 = [1, 1, 0, 1] # the whole time the generatora were typed in in reverse so the output was not consistenet
 
 generators = [g1, g2] # the order of generators is reversed to match the expected output
 
